@@ -20,8 +20,10 @@ public class Tree extends SimulatedObject{
 	 */
 	public Tree(Scene s, int speed) {
 		super(false, Colors.green);
-		transform.position = new Point(2500, 570);
-		transform.scale = new Dimension(150, 300);
+		int h = speed*25;
+		int w = speed*50;
+		transform.position = new Point(2500, 720-h);
+		transform.scale = new Dimension(h, w);
 		this.s = s;
 		this.speed = speed;
 		// TODO Auto-generated constructor stub

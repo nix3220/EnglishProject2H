@@ -16,6 +16,7 @@ public class Player extends SimulatedObject{
 	
 	int vX = 0;
 	int vY = 0;
+	int speed = 4;
 	public boolean canMove = true;
 	
 	public Player(Transform t) {
@@ -39,7 +40,9 @@ public class Player extends SimulatedObject{
 		if(canMove) {
 			transform.position.x += x;
 			transform.position.y += y;
-			scene.updateCamera(x, y);
+			
+			if(!scene.stillCamera)
+				scene.updateCamera(x, y);
 		}
 	}
 
@@ -49,24 +52,32 @@ public class Player extends SimulatedObject{
 		Pair<Boolean, SimulatedObject> pair = scene.isColliding(this);
 		if(!pair.first) {
 			if(scene.input.keyDown(KeyEvent.VK_A)) {
-				move(-3, 0, scene);
+				move(-speed, 0, scene);
 			}
 			if(scene.input.keyDown(KeyEvent.VK_D)) {
-				move(3, 0, scene);
+				move(speed, 0, scene);
 			}
 		}
 		else {
 			Point other = pair.second.transform.position;
 			if(other.x < transform.position.x) {
-				move(3, 0, scene);
+				move(speed, 0, scene);
 			}
 			else {
-				move(-3, 0, scene);
+				move(-speed, 0, scene);
 			}
 		}
 		
 		if(transform.position.y + transform.scale.height-25 <= scene.panel.getHeight()) {
 			//move(0, 2, scene);
+		}
+		if(scene.stillCamera) {
+			if(transform.position.x < 0) {
+				move(-transform.position.x, 0, scene);
+			}
+			else if(transform.position.x+transform.scale.width > 1280) {
+				move(1280-(transform.position.x+transform.scale.width), 0, scene);
+			}
 		}
 	}
 	

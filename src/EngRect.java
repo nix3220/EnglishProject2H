@@ -1,6 +1,8 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 
 import javax.swing.ImageIcon;
 
@@ -21,24 +23,36 @@ public class EngRect extends SimulatedObject{
 	 * @param sideLength
 	 * @param color
 	 */
-	public EngRect(Transform t, Color c) {
-		super(true, c);
-		this.transform = t;
-		this.color = c;
-	}
-	
-	public EngRect(Transform t, Image i, boolean collide, Game p) {
-		super(collide, Color.BLACK);
-		this.transform = t;
-		icon = i;
-		this.p = p;
-	}
 	
 	public EngRect(Transform t, Color c, boolean collide) {
 		super(collide, c);
 		this.transform = t;
 		this.color = c;
 	}
+	
+	
+	public EngRect(Transform t, Color c) {
+		this(t, c, false);
+	}
+	
+	public EngRect(Transform t, Image i, boolean collide, Game p) {
+		this(t, Color.black);
+		icon = i;
+		this.p = p;
+	}
+	
+	public EngRect(int x, int y, int width, int height, Color c) {
+		this(new Transform(new Point(x, y), new Dimension(width, height)), c);
+	}
+	
+	public EngRect(int x, int y, int width, int height, Color c, boolean collide) {
+		this(new Transform(new Point(x, y), new Dimension(width, height)), c, collide);
+	}
+	
+	public EngRect(int x, int y, int width, int height, Image i, boolean collide, Game p) {
+		this(new Transform(new Point(x, y), new Dimension(width, height)), i, collide, p);
+	}
+	
 
 	/**
 	 * @return the color

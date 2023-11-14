@@ -48,6 +48,8 @@ public class Scene extends SimulatedObject{
 		//p.addKeyListener(input);
 	}
 	
+	boolean stillCamera = false;
+	
 	Dialogue currentDialogue = null;
 	
 	
@@ -180,8 +182,8 @@ public class Scene extends SimulatedObject{
 	}
 	
 	public void updateCamera(int x, int y) {
-		this.currentCameraPosition.x -= x;
-		this.currentCameraPosition.y -= y;
+			this.currentCameraPosition.x -= x;
+			this.currentCameraPosition.y -= y;
 	}
 	
 	@Override

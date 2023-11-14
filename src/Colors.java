@@ -20,6 +20,6 @@ public class Colors extends Color {
 		super(r, g, b, a);
 		// TODO Auto-generated constructor stub
 	}
-	public static Color brown = new Color(155, 107, 30);
-	public static Color light_brown = new Color(209, 147, 48);
+	public static final Color brown = new Color(155, 107, 30);
+	public static final Color light_brown = new Color(209, 147, 48);
 }

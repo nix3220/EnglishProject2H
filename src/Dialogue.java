@@ -10,7 +10,7 @@ import java.util.*;
  * @author s019343
  *
  */
-public class Dialogue {
+public class Dialogue{
 	public String author;
 	private Queue<String> dialogue = new LinkedList<String>();
 	public Interaction interaction = null;
@@ -33,11 +33,12 @@ public class Dialogue {
 			Scanner s = new Scanner(f);
 			int lines = 0;
 			while(s.hasNext()) {
+				String line = s.nextLine();
 				if(lines == 0) {
-					this.author = s.nextLine();
+					this.author = line;
 				}
 				else {
-					dialogue.offer(s.nextLine());
+					dialogue.offer(line);
 				}
 				lines++;
 			}

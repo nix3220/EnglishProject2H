@@ -43,7 +43,7 @@ public class Game extends JPanel implements ActionListener{
 		this.setPreferredSize(size);
 		timer = new Timer(delay, this);
 		timer.start();
-		loadScene(houseScene());
+		loadScene(schoolScene());
 		this.setFocusable(true);
 		this.setBackground(Color.black);
 	}
@@ -138,7 +138,7 @@ public class Game extends JPanel implements ActionListener{
 			scene.showDialogue(d);
 			d.interaction = () -> {
 				Dialogue meTalk = new Dialogue("src/dialogues/radioResponse");
-				meTalk.interaction = () -> loadScene(houseScene());
+				meTalk.interaction = () -> loadScene(schoolScene());
 				currentScene.showDialogue(meTalk);
 			};
 		}, 150, "Press E to get in the car");
@@ -146,6 +146,21 @@ public class Game extends JPanel implements ActionListener{
 		
 		EngRect carOnRoad = new EngRect(new Transform(new Point(1600, 520), new Dimension(400, 200)), getImage("car"), false, this);
 		scene.addObject(carOnRoad);
+		return scene;
+	}
+	
+	public Scene schoolScene() {
+		Scene scene = new Scene(this);
+		scene.stillCamera = true;
+		scene.currentCameraPosition.y -= 100;
+		scene.addObject(new EngRect(0, 720, 1280, 100, Colors.brown));
+		scene.addObject(new EngRect(0, 0, 1280, 720, Colors.light_brown));
+		scene.addObject(player);
+//		Dialogue d = new Dialogue("src/dialogues/teacher");
+//		d.interaction = () -> {
+//			scene.showDialogue(new Dialogue("src/dialogues/principal"));
+//		};
+		//scene.showDialogue(d);
 		return scene;
 	}
 	
