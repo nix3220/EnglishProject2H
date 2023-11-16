@@ -81,5 +81,13 @@ public class EngRect extends SimulatedObject{
 		}
 		else g.fillRect(transform.position.x, transform.position.y, transform.scale.width, transform.scale.height);
 	}
+
+
+	/**
+	 * 
+	 */
+	public void clearInteractable() {
+		this.interaction = null;
+	}
 	
 }

@@ -38,22 +38,33 @@ public class Game extends JPanel implements ActionListener{
 	Input input = new Input();
 	
 	private boolean collectedShoes = false;
+	Dimension size;
+	int delay;
 	
 	public Game(Dimension size, int delay) {
+		this.size = size;
+		this.delay = delay;
+		init();
+	}
+	
+	public void init() {
 		this.setPreferredSize(size);
 		timer = new Timer(delay, this);
 		timer.start();
-		loadScene(schoolScene());
+		loadScene(carScene());
 		this.setFocusable(true);
 		this.setBackground(Color.black);
 	}
 	
 	public Image getImage(String imageName) {
-		return getImage(imageName, "png");
+		return getImage(this.getClass().getClassLoader(), imageName, "png");
 	}
 	
-	public Image getImage(String imageName, String extension) {
-		ClassLoader cldr = this.getClass().getClassLoader();
+	public static Image getImage(ClassLoader loader, String imageName) {
+		return getImage(loader, imageName, "png");
+	}
+	
+	public static Image getImage(ClassLoader cldr, String imageName, String extension) {
 		String imagePath = "resources/"+imageName+"."+extension;
 		URL imageURL = cldr.getResource(imagePath);
 		ImageIcon icon = new ImageIcon(imageURL);
@@ -63,8 +74,15 @@ public class Game extends JPanel implements ActionListener{
 	
 	public void loadScene(Scene scene) {
 		if(currentScene != null) scene.currentCameraPosition = currentScene.currentCameraPosition;
+		if(currentScene != null && currentScene.stillCamera && !scene.stillCamera) {
+			moveBackCamera(scene);
+		}
 		currentScene = scene;
 		resetPlayer();
+	}
+	
+	public void moveBackCamera(Scene scene) {
+		scene.currentCameraPosition.x += 520;
 	}
 	
 	public Scene houseScene() {
@@ -96,7 +114,7 @@ public class Game extends JPanel implements ActionListener{
 		defaultScene.addObject(new EngRect(new Transform(new Point(1970, 350), new Dimension(30, 170)), Colors.light_brown));
 		
 		//locked door
-		EngRect locked = new EngRect(new Transform(new Point(0, 520), new Dimension(20, 200)), Colors.brown);
+		EngRect locked = new EngRect(new Transform(new Point(0, 520), new Dimension(20, 200)), Colors.brown, true);
 		locked.addInteractable(() -> {defaultScene.showDialogue(new Dialogue("Me", "It's locked"));}, 110, "The door is locked");
 		defaultScene.addObject(locked);
 		
@@ -126,11 +144,12 @@ public class Game extends JPanel implements ActionListener{
 		scene.addObject(new EngRect(new Transform(new Point(-1000, 300), new Dimension(1000, 520)), Colors.light_brown));
 		scene.addObject(new EngTri(false, new Point(-1000, 300), 1000, 300, Color.orange));
 		
-		EngRect door = new EngRect(new Transform(new Point(-20, 520), new Dimension(20, 200)), Colors.brown);
+		EngRect door = new EngRect(new Transform(new Point(-20, 520), new Dimension(20, 200)), Colors.brown, true);
 		door.addInteractable(() -> {}, 120, "I should get in the car");
 		scene.addObject(door);
 		
 		EngRect car = new EngRect(new Transform(new Point(400, 520), new Dimension(400, 200)), getImage("car"), true, this);
+		EngRect carCol = new EngRect(new Transform(new Point(400, 520), new Dimension(400, 200)), Colors.clear, true);
 		car.addInteractable(() -> {
 			player.move(1500, -50, scene);
 			player.canMove = false;
@@ -143,6 +162,7 @@ public class Game extends JPanel implements ActionListener{
 			};
 		}, 150, "Press E to get in the car");
 		scene.addObject(car);
+		scene.addObject(carCol);
 		
 		EngRect carOnRoad = new EngRect(new Transform(new Point(1600, 520), new Dimension(400, 200)), getImage("car"), false, this);
 		scene.addObject(carOnRoad);
@@ -152,20 +172,47 @@ public class Game extends JPanel implements ActionListener{
 	public Scene schoolScene() {
 		Scene scene = new Scene(this);
 		scene.stillCamera = true;
-		scene.currentCameraPosition.y -= 100;
+		//scene.currentCameraPosition.y -= 100;
 		scene.addObject(new EngRect(0, 720, 1280, 100, Colors.brown));
 		scene.addObject(new EngRect(0, 0, 1280, 720, Colors.light_brown));
+		scene.addObject(new EngRect(80, 230, 640, 440, Colors.black));
+		scene.addObject(new EngRect(100, 250, 600, 400, Colors.white));
+		EngRect door = new EngRect(-50, 620, 50, 100, Colors.white);
+		scene.addObject(door);
+		EngRect rect = new EngRect(600, 550, 130, 170, getImage("chair"), true, this);
+		rect.addInteractable(() -> {
+			player.move(600-player.transform.position.x+30, -70, scene);
+			Dialogue d = new Dialogue("src/dialogues/teacher");
+			d.interaction = () -> {
+				scene.showDialogue(new Dialogue("src/dialogues/principal").setOnComplete(() -> {
+					player.move(-150, 70, scene);
+					scene.showDialogue(new Dialogue("src/dialogues/leave").setOnComplete(() -> {
+						door.addInteractable(() -> {
+							loadScene(houseScene());
+						}, 150, "Press E to go home");
+					}));
+				}));
+			};
+			scene.showDialogue(d);
+			rect.clearInteractable();
+		}, 150, "Press E to sit in the chair");
+		scene.addObject(rect);
 		scene.addObject(player);
-//		Dialogue d = new Dialogue("src/dialogues/teacher");
-//		d.interaction = () -> {
-//			scene.showDialogue(new Dialogue("src/dialogues/principal"));
-//		};
-		//scene.showDialogue(d);
+		scene.addObject(new EngRect(1000, 500, 220, 220, getImage("teacher"), true, this));
+		scene.addObject(new EngRect(730, 600, 230, 120, getImage("table"), true, this));
+		scene.addObject(new EngRect(730, 600, 230, 120, new Color(0,0,0,0), true));
 		return scene;
 	}
 	
 	public void resetPlayer() {
-		player.move(-player.transform.position.x+100, 620-player.transform.position.y, currentScene);
+		if(currentScene.stillCamera) {
+			currentScene.updateCamera(-player.transform.position.x+580, 620-player.transform.position.y);
+			player.transform.position.x += -player.transform.position.x+100;
+			player.transform.position.y += 620-player.transform.position.y;
+		}
+		else {
+			player.move(-player.transform.position.x+100, 620-player.transform.position.y, currentScene);
+		}
 	}
 	
 	public void openDoor() {
@@ -181,7 +228,7 @@ public class Game extends JPanel implements ActionListener{
 	public void paintComponent(Graphics g) {
 		//super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D)g;
-		g2D.drawImage(getImage("sky", "jpeg"), 0, 0, null);
+		g2D.drawImage(getImage(getClass().getClassLoader(), "sky", "jpeg"), 0, 0, null);
 		if(currentScene != null) currentScene.render(g2D);
 	}
 

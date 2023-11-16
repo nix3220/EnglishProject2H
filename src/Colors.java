@@ -22,4 +22,5 @@ public class Colors extends Color {
 	}
 	public static final Color brown = new Color(155, 107, 30);
 	public static final Color light_brown = new Color(209, 147, 48);
+	public static final Color clear = new Color(0,0,0,0);
 }

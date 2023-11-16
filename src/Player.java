@@ -1,8 +1,12 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.net.URL;
+
+import javax.swing.ImageIcon;
 
 /**
  * 
@@ -85,7 +89,12 @@ public class Player extends SimulatedObject{
 	@Override
 	public void render(Graphics2D g) {
 		// TODO Auto-generated method stub
+		ClassLoader cldr = this.getClass().getClassLoader();
+		String imagePath = "resources/player.png";
+		URL imageURL = cldr.getResource(imagePath);
+		ImageIcon icon = new ImageIcon(imageURL);
+		Image img = icon.getImage();
 		g.setColor(color);
-		g.fillRect(transform.position.x, transform.position.y, transform.scale.width, transform.scale.height);
+		g.drawImage(img, transform.position.x, transform.position.y, transform.scale.width, transform.scale.height, null);
 	}
 }

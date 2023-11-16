@@ -23,6 +23,11 @@ public class Dialogue{
 		}
 	}
 	
+	public Dialogue setOnComplete(Interaction interaction) {
+		this.interaction = interaction;
+		return this;
+	}
+	
 	public Dialogue(String author, String... strings) {
 		this(author, Arrays.asList(strings));
 	}
