@@ -14,18 +14,20 @@ import java.awt.Point;
 public class Tree extends SimulatedObject{
 	int speed = 6;
 	Scene s;
+	int position = 2500;
 	/**
 	 * @param collide
 	 * @param color
 	 */
-	public Tree(Scene s, int speed) {
+	public Tree(Scene s, int speed, int position) {
 		super(false, Colors.green);
 		int h = speed*25;
 		int w = speed*50;
-		transform.position = new Point(2500, 720-h);
+		transform.position = new Point(position, 720-h);
 		transform.scale = new Dimension(h, w);
 		this.s = s;
 		this.speed = speed;
+		this.position = position;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -33,8 +35,8 @@ public class Tree extends SimulatedObject{
 	public void tick(Scene scene) {
 		// TODO Auto-generated method stub
 		transform.position.x -= speed;
-		if(transform.position.x < 1150) {
-			scene.addObject(0, new Tree(scene, speed));
+		if(transform.position.x < position-1350) {
+			scene.addObject(0, new Tree(scene, speed, position));
 			scene.removeObject(this);
 		}
 	}

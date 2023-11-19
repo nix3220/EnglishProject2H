@@ -51,7 +51,7 @@ public class Game extends JPanel implements ActionListener{
 		this.setPreferredSize(size);
 		timer = new Timer(delay, this);
 		timer.start();
-		loadScene(carScene());
+		loadScene(houseScene());
 		this.setFocusable(true);
 		this.setBackground(Color.black);
 	}
@@ -135,9 +135,9 @@ public class Game extends JPanel implements ActionListener{
 	
 	public Scene carScene() {
 		Scene scene = new Scene(this);
-		scene.addObject(new Tree(scene, 3));
-		scene.addObject(new Tree(scene, 5));
-		scene.addObject(new Tree(scene, 7));
+		scene.addObject(new Tree(scene, 3, 2500));
+		scene.addObject(new Tree(scene, 5, 2500));
+		scene.addObject(new Tree(scene, 7, 2500));
 		scene.addObject(player);
 		scene.addObject(new EngRect(new Transform(new Point(0, 720), new Dimension(200, 100)), Colors.LIGHT_GRAY));
 		scene.addObject(new EngRect(new Transform(new Point(200, 720), new Dimension(3000, 100)), Colors.DARK_GRAY));
@@ -172,7 +172,6 @@ public class Game extends JPanel implements ActionListener{
 	public Scene schoolScene() {
 		Scene scene = new Scene(this);
 		scene.stillCamera = true;
-		//scene.currentCameraPosition.y -= 100;
 		scene.addObject(new EngRect(0, 720, 1280, 100, Colors.brown));
 		scene.addObject(new EngRect(0, 0, 1280, 720, Colors.light_brown));
 		scene.addObject(new EngRect(80, 230, 640, 440, Colors.black));
@@ -188,7 +187,7 @@ public class Game extends JPanel implements ActionListener{
 					player.move(-150, 70, scene);
 					scene.showDialogue(new Dialogue("src/dialogues/leave").setOnComplete(() -> {
 						door.addInteractable(() -> {
-							loadScene(houseScene());
+							loadScene(busScene());
 						}, 150, "Press E to go home");
 					}));
 				}));
@@ -201,6 +200,63 @@ public class Game extends JPanel implements ActionListener{
 		scene.addObject(new EngRect(1000, 500, 220, 220, getImage("teacher"), true, this));
 		scene.addObject(new EngRect(730, 600, 230, 120, getImage("table"), true, this));
 		scene.addObject(new EngRect(730, 600, 230, 120, new Color(0,0,0,0), true));
+		return scene;
+	}
+	
+	public Scene busScene() {
+		Scene scene = new Scene(this);
+		scene.addObject(new Tree(scene, 3, 1000));
+		scene.addObject(new Tree(scene, 5, 1000));
+		scene.addObject(new Tree(scene, 7, 1000));
+		scene.addObject(new EngRect(-400, 720, 2000, 300, Colors.gray));
+		scene.addObject(player);
+		scene.addObject(new EngRect(0, 420, 700, 300, getImage("bus"), true, this));
+		player.canMove = false;
+		scene.showDialogue(new Dialogue("src/dialogues/bus").setOnComplete(() -> {
+			loadScene(timeScene());
+		}));
+		return scene;
+	}
+	
+	public Scene timeScene() {
+		Scene scene = new Scene(this);
+		scene.addObject(player);
+		scene.addObject(new EngRect(-1000, 0, 12800, 7200, Colors.black));
+		scene.showDialogue(new Dialogue("", "3 years later...").setOnComplete(() -> {
+			loadScene(returnScene());
+		}));
+		return scene;
+	}
+	
+	public Scene endScene() {
+		Scene scene = new Scene(this);
+		scene.addObject(player);
+		scene.addObject(new EngRect(-1000, 0, 12800, 7200, Colors.black));
+		scene.showDialogue(new Dialogue("", "Thanks for playing!", "Press space to restart").setOnComplete(() -> {
+			loadScene(houseScene());
+		}));
+		return scene;
+	}
+	
+	public Scene returnScene() {
+		Scene scene = new Scene(this);
+		scene.stillCamera = true;
+		//scene.currentCameraPosition.y -= 100;
+		scene.addObject(new EngRect(0, 720, 1280, 100, Colors.brown));
+		scene.addObject(new EngRect(0, 0, 1280, 720, Colors.light_brown));
+		scene.addObject(new EngRect(80, 230, 640, 440, Colors.black));
+		scene.addObject(new EngRect(100, 250, 600, 400, Colors.white));
+		EngRect door = new EngRect(-50, 620, 50, 100, Colors.white);
+		scene.addObject(door);
+		EngRect rect = new EngRect(600, 550, 130, 170, getImage("chair"), true, this);
+		scene.addObject(rect);
+		scene.addObject(player);
+		scene.addObject(new EngRect(1000, 500, 220, 220, getImage("teacher"), true, this));
+		scene.addObject(new EngRect(730, 600, 230, 120, getImage("table"), true, this));
+		scene.addObject(new EngRect(730, 600, 230, 120, new Color(0,0,0,0), true));
+		scene.showDialogue(new Dialogue("Teacher", "Welcome to eighth grade!").setOnComplete(() -> {
+			loadScene(endScene());
+		}));
 		return scene;
 	}
 	

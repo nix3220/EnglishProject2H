@@ -17,7 +17,7 @@ public class Dialogue{
 	
 	public Dialogue(String author, List<String> items) {
 		this.author = author;
-		for(int i = items.size()-1; i >= 0; i--) {
+		for(int i = 0; i < items.size(); i++) {
 			String s = items.get(i);
 			dialogue.offer(s);
 		}

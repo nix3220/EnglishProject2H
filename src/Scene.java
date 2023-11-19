@@ -152,15 +152,17 @@ public class Scene extends SimulatedObject{
 		int strSize = g.getFontMetrics().stringWidth("Press Space to continue");
 		g.drawString("Press Space to continue", x + width-strSize - 30, y + height - 30);
 		
-		int fs = 60;
-		g.setFont(new Font("arial", fs, fs));
-		g.setColor(Color.white);
-		int size = g.getFontMetrics().stringWidth(currentDialogue.author);
-		g.fillRect(x, y + height, size + 20, fs+10);
-		g.setColor(Color.black);
-		g.fillRect(x+5, y + height+5, size + 10, fs);
-		g.setColor(Color.white);
-		g.drawString(currentDialogue.author, x+10, y+height+fs);
+		if(!currentDialogue.author.equals("")) {
+			int fs = 60;
+			g.setFont(new Font("arial", fs, fs));
+			g.setColor(Color.white);
+			int size = g.getFontMetrics().stringWidth(currentDialogue.author);
+			g.fillRect(x, y + height, size + 20, fs+10);
+			g.setColor(Color.black);
+			g.fillRect(x+5, y + height+5, size + 10, fs);
+			g.setColor(Color.white);
+			g.drawString(currentDialogue.author, x+10, y+height+fs);
+		}
 	}
 	
 	public Pair<Boolean, SimulatedObject> isColliding(SimulatedObject so){
