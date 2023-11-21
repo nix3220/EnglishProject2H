@@ -208,9 +208,10 @@ public class Game extends JPanel implements ActionListener{
 		scene.addObject(new Tree(scene, 3, 1000));
 		scene.addObject(new Tree(scene, 5, 1000));
 		scene.addObject(new Tree(scene, 7, 1000));
-		scene.addObject(new EngRect(-400, 720, 2000, 300, Colors.gray));
+		scene.addObject(new EngRect(-1000, 720, 3000, 300, Colors.gray));
 		scene.addObject(player);
 		scene.addObject(new EngRect(0, 420, 700, 300, getImage("bus"), true, this));
+		player.move(275, -150, scene);
 		player.canMove = false;
 		scene.showDialogue(new Dialogue("src/dialogues/bus").setOnComplete(() -> {
 			loadScene(timeScene());
